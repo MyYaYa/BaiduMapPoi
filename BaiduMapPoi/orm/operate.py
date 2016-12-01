@@ -1,13 +1,13 @@
+# -*- coding: utf-8 -*-
+
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from .entity import *
 from ..baidu_api import BaiduApi
 import uuid
-from ..log import Logger
+from ..log import logger
 
 class Operate():
-
-    log = Logger("operate.log")
 
     '''
         Initalization
@@ -18,8 +18,8 @@ class Operate():
             (self.dbconfig["user"], self.dbconfig["passwd"], self.dbconfig["db"]))
         DBSession = sessionmaker(bind=engine)
         self.session = DBSession()
-        self.log.debug("Database Connected!")
-        self.log.debug("Database Session Created!")
+        logger.debug("******** Database Connected! ********\n")
+        logger.debug("******** Database Session Created! ********\n")
 
     def query_community(self, limitation):
         return self.session.query(Community).filter(Community.lat == None).limit(limitation).all()
@@ -29,6 +29,7 @@ class Operate():
         com: community object, poi_type: POI type from(ie. bus, subway...)
     '''
     def insert(self, com):
+        logger.debug("******** Start Community process: %s ********" % com.title)
         if not com.address:
             return
         bd = BaiduApi(com.address)
@@ -50,6 +51,7 @@ class Operate():
                                             bus_station_id = bus.id,
                                             distance = x.get("detail_info").get("distance"),)
             self.session.add(relation)
+        logger.debug("          Add into session: 公交")
         subway_item = bd.getInfo("地铁", 2000)
         for x in subway_item:
             subway = self.session.query(SubwayStation).filter(and_(SubwayStation.lat==x.get("location").get("lat"),SubwayStation.lng==x.get("location").get("lng"))).first()
@@ -65,6 +67,7 @@ class Operate():
                                                 subway_station_id = subway.id,
                                                 distance = x.get("detail_info").get("distance"),)
             self.session.add(relation)
+        logger.debug("          Add into session: 地铁")
         school_items = bd.getInfo("学校", 2000)
         for x in school_items:
             school = self.session.query(School).filter(and_(School.lat==x.get("location").get("lat"),School.lng==x.get("location").get("lng"))).first()
@@ -81,6 +84,7 @@ class Operate():
                                                 school_id = school.id,
                                                 distance = x.get("detail_info").get("distance"),)
             self.session.add(relation)
+        logger.debug("          Add into session: 学校")
         hospital_items = bd.getInfo("医院", 2000)
         for x in hospital_items:
             hospital = self.session.query(Hospital).filter(and_(Hospital.lat==x.get("location").get("lat"),Hospital.lng==x.get("location").get("lng"))).first()
@@ -97,6 +101,7 @@ class Operate():
                                                     hospital_id = hospital.id,
                                                     distance = x.get("detail_info").get("distance"),)
             self.session.add(relation)
+        logger.debug("          Add into session: 医院")
         commercial_items = bd.getInfo("商圈", 2000)
         for x in commercial_items:
             commercial = self.session.query(CommercialArea).filter(and_(CommercialArea.lat==x.get("location").get("lat"),CommercialArea.lng==x.get("location").get("lng"))).first()
@@ -113,6 +118,7 @@ class Operate():
                                                     commercial_area_id = commercial.id,
                                                     distance = x.get("detail_info").get("distance"),)
             self.session.add(relation)
+        logger.debug("          Add into session: 商圈")
         market_items = bd.getInfo("商场", 2000)
         for x in market_items:
             market = self.session.query(MarketPlace).filter(and_(MarketPlace.lat==x.get("location").get("lat"),MarketPlace.lng==x.get("location").get("lng"))).first()
@@ -129,13 +135,14 @@ class Operate():
                                                 market_place_id = market.id,
                                                 distance = x.get("detail_info").get("distance"),)
             self.session.add(relation)
-        # self.session.commit()
-        self.log.debug("Community %s Processed!" % com.title)
+        logger.debug("          Add into session: 商场")
+        self.session.commit()
+        logger.debug("******** Community %s Processed! ********\n" % com.title)
 
     def commit(self):
         self.session.commit()
-        self.log.debug("Session Commited")
+        logger.debug("******** Session Commited! ********\n")
 
     def finish(self):
         self.session.close()
-        self.log.debug("Session finished!")
+        logger.debug("******** Session finished! ********\n")

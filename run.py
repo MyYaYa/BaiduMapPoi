@@ -1,24 +1,32 @@
+# -*- coding: utf-8 -*-
+
 from BaiduMapPoi.orm.operate import Operate
 from BaiduMapPoi import setting
+from BaiduMapPoi.baidu_exception import *
+from BaiduMapPoi.log import logger
+from BaiduMapPoi.signal_process import SignalProcess
 
-# engine = create_engine('mysql+pymysql://root:byd123@localhost:3306/house_spider?charset=utf8')
-# DBSession = sessionmaker(bind=engine)
-# session = DBSession()
-#
-# all = session.query(Community).filter(Community.lat == None).limit(10).all()
-# i = 0
-# for x in all:
-#     bd = BaiduApi(x.address)
-#     x.lat = bd.lat
-#     x.lng = bd.lng
-#     i = i + 1
-#
-# session.commit()
-#
-# print(i)
+sig = SignalProcess()
 op = Operate(setting.DB_CONFIG)
-communities = op.query_community(100)
-for com in communities:
-    op.insert(com)
-op.commit()
+
+while(True):
+    communities = op.query_community(10)
+    for com in communities:
+        try:
+            op.insert(com)
+        except GeoApiError as e:
+            logger.warn("!!!!!!!! GeocodingApi error: %s, status code: %d !!!!!!!!" % (com.title, e.status))
+            com.lat = 0.0
+            com.lng = 0.0
+            op.commit()
+        except PlaceApiError as e:
+            logger.warn("!!!!!!!! PlaceApi error: %s, status code: %d !!!!!!!!" % (com.title, e.status))
+            break
+        else:
+            if sig.is_interrupt == True:
+                break
+    else:
+        continue
+    break
+
 op.finish()

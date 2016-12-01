@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import logging
 
 class Logger():
@@ -31,3 +33,5 @@ class Logger():
 
     def critical(self, message):
         self.logger.critical(message)
+
+logger = Logger("running.log")
