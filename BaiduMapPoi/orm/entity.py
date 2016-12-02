@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import Column, Integer, String, Float, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Float, TIMESTAMP, DECIMAL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import func
 
@@ -24,8 +24,8 @@ class Community(Base):
     parking_num = Column(String(64))
     green_rate = Column(String(10))
     plot_rate = Column(String(10))
-    lat = Column(Float(32))
-    lng = Column(Float(32))
+    lat = Column(DECIMAL(32,20))
+    lng = Column(DECIMAL(32,20))
     update_time = Column(TIMESTAMP(), default=func.now())
 
 class CommunityPriceHistory(Base):
@@ -40,16 +40,16 @@ class BusStation(Base):
     __tablename__ = "bus_station"
     id = Column(String(36), primary_key=True)
     name = Column(String(64))
-    lat = Column(Float(32))
-    lng = Column(Float(32))
+    lat = Column(DECIMAL(32,20))
+    lng = Column(DECIMAL(32,20))
     lines = Column(String(512))
 
 class SubwayStation(Base):
     __tablename__ = "subway_station"
     id = Column(String(36), primary_key=True)
     name = Column(String(64))
-    lat = Column(Float(32))
-    lng = Column(Float(32))
+    lat = Column(DECIMAL(32,20))
+    lng = Column(DECIMAL(32,20))
     lines = Column(String(255))
 
 class Hospital(Base):
@@ -57,8 +57,8 @@ class Hospital(Base):
     id = Column(String(36), primary_key=True)
     name = Column(String(64))
     address = Column(String(255))
-    lat = Column(Float(32))
-    lng = Column(Float(32))
+    lat = Column(DECIMAL(32,20))
+    lng = Column(DECIMAL(32,20))
     tag= Column(String(255))
 
 class School(Base):
@@ -66,8 +66,8 @@ class School(Base):
     id = Column(String(36), primary_key=True)
     name = Column(String(64))
     address = Column(String(255))
-    lat = Column(Float(32))
-    lng = Column(Float(32))
+    lat = Column(DECIMAL(32,20))
+    lng = Column(DECIMAL(32,20))
     tag = Column(String(255))
 
 class CommercialArea(Base):
@@ -75,8 +75,8 @@ class CommercialArea(Base):
     id = Column(String(36), primary_key=True)
     name = Column(String(64))
     address = Column(String(255))
-    lat = Column(Float(32))
-    lng = Column(Float(32))
+    lat = Column(DECIMAL(32,20))
+    lng = Column(DECIMAL(32,20))
     tag = Column(String(255))
 
 class MarketPlace(Base):
@@ -84,8 +84,8 @@ class MarketPlace(Base):
     id = Column(String(36), primary_key=True)
     name = Column(String(64))
     address = Column(String(255))
-    lat = Column(Float(32))
-    lng = Column(Float(32))
+    lat = Column(DECIMAL(32,20))
+    lng = Column(DECIMAL(32,20))
     tag = Column(String(255))
 
 class CommunityBusRelation(Base):

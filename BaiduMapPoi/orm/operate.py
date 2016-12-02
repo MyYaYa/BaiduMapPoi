@@ -38,7 +38,9 @@ class Operate():
         self.session.add(com)
         bus_items = bd.getInfo("公交", 2000)
         for x in bus_items:
-            bus = self.session.query(BusStation).filter(and_(BusStation.lat == x.get("location").get("lat"), BusStation.lng == x.get("location").get("lng"))).first()
+            bus = self.session.query(BusStation).filter(and_(BusStation.name == x.get("name"),
+                                                            BusStation.lat == x.get("location").get("lat"),
+                                                            BusStation.lng == x.get("location").get("lng"))).first()
             if not bus:
                 bus = BusStation(id = str(uuid.uuid1()),
                                 name = x.get("name"),
@@ -54,7 +56,9 @@ class Operate():
         logger.debug("          Add into session: 公交")
         subway_item = bd.getInfo("地铁", 2000)
         for x in subway_item:
-            subway = self.session.query(SubwayStation).filter(and_(SubwayStation.lat==x.get("location").get("lat"),SubwayStation.lng==x.get("location").get("lng"))).first()
+            subway = self.session.query(SubwayStation).filter(and_(SubwayStation.name == x.get("name"),
+                                                                SubwayStation.lat == x.get("location").get("lat"),
+                                                                SubwayStation.lng == x.get("location").get("lng"))).first()
             if not subway:
                 subway = SubwayStation(id = str(uuid.uuid1()),
                                         name = x.get("name"),
@@ -70,7 +74,9 @@ class Operate():
         logger.debug("          Add into session: 地铁")
         school_items = bd.getInfo("学校", 2000)
         for x in school_items:
-            school = self.session.query(School).filter(and_(School.lat==x.get("location").get("lat"),School.lng==x.get("location").get("lng"))).first()
+            school = self.session.query(School).filter(and_(School.name == x.get("name"),
+                                                            School.lat == x.get("location").get("lat"),
+                                                            School.lng == x.get("location").get("lng"))).first()
             if not school:
                 school = School(id = str(uuid.uuid1()),
                                 name = x.get("name"),
@@ -87,7 +93,9 @@ class Operate():
         logger.debug("          Add into session: 学校")
         hospital_items = bd.getInfo("医院", 2000)
         for x in hospital_items:
-            hospital = self.session.query(Hospital).filter(and_(Hospital.lat==x.get("location").get("lat"),Hospital.lng==x.get("location").get("lng"))).first()
+            hospital = self.session.query(Hospital).filter(and_(Hospital.name == x.get("name"),
+                                                                Hospital.lat == x.get("location").get("lat"),
+                                                                Hospital.lng == x.get("location").get("lng"))).first()
             if not hospital:
                 hospital = Hospital(id = str(uuid.uuid1()),
                                     name = x.get("name"),
@@ -104,7 +112,9 @@ class Operate():
         logger.debug("          Add into session: 医院")
         commercial_items = bd.getInfo("商圈", 2000)
         for x in commercial_items:
-            commercial = self.session.query(CommercialArea).filter(and_(CommercialArea.lat==x.get("location").get("lat"),CommercialArea.lng==x.get("location").get("lng"))).first()
+            commercial = self.session.query(CommercialArea).filter(and_(CommercialArea.name == x.get("name"),
+                                                                        CommercialArea.lat == x.get("location").get("lat"),
+                                                                        CommercialArea.lng == x.get("location").get("lng"))).first()
             if not commercial:
                 commercial = CommercialArea(id = str(uuid.uuid1()),
                                             name = x.get("name"),
@@ -121,7 +131,9 @@ class Operate():
         logger.debug("          Add into session: 商圈")
         market_items = bd.getInfo("商场", 2000)
         for x in market_items:
-            market = self.session.query(MarketPlace).filter(and_(MarketPlace.lat==x.get("location").get("lat"),MarketPlace.lng==x.get("location").get("lng"))).first()
+            market = self.session.query(MarketPlace).filter(and_(MarketPlace.name == x.get("name"),
+                                                                MarketPlace.lat == x.get("location").get("lat"),
+                                                                MarketPlace.lng == x.get("location").get("lng"))).first()
             if not market:
                 market = MarketPlace(id = str(uuid.uuid1()),
                                         name = x.get("name"),

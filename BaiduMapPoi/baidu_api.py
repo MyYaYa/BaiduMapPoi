@@ -8,7 +8,7 @@ import json
 class BaiduApi():
 
     output = 'json'
-    ak = 'juUHBugfdfVlthxjY5zyKlpNQA4IM8UM'
+    ak = 'ipFmlwUeVoDiHtbpDdjuO5Bn7YxIaVKm'
 
     def __init__(self, address):
         self.address = address
